@@ -10,7 +10,7 @@ class DecisionTree:
     """
     Note: Current methodology is that for a Decision Tree Regressor. 
     Future work will include is that for a classifier specifically 
-    redefining the information gain formula.
+    redefining the information gain formula
     Methods:
         - __init__ -> initialize the variables you think you will need
         - train_tree -> takes in two numpy arrays as inputs (inputs, outputs)
