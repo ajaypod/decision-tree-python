@@ -31,6 +31,7 @@ class DecisionTree:
         self.left = None
         self.right = None
         self.prediction = None
+        
         self.decision_boundary = decision_boundary
         self.node_feature = node_feature
 
