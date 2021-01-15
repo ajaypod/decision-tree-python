@@ -44,11 +44,9 @@ class DecisionTree:
             outputs (np.array): Output variable as a Numpy Array
             min_leaf_size (int, optional): an integer determining the minimum number of records
                         a node needs in order to be further split. Defaults to 10.
-            max_depth (int, optional): an integer determining the maximum depth of the tree. Defaults to 10.
         """        
 
         self.min_leaf_size = min_leaf_size
-        # self.max_depth = max_depth
 
         assert outputs.ndim == 1, "Error: y variable array needs to be 1d"
         # Initiate best_split_feat to record best split feature
