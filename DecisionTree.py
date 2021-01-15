@@ -31,12 +31,11 @@ class DecisionTree:
         self.left = None
         self.right = None
         self.prediction = None
-        
         self.decision_boundary = decision_boundary
         self.node_feature = node_feature
 
 
-    def train_tree(self, inputs, outputs, min_leaf_size=10, max_depth=10):
+    def train_tree(self, inputs, outputs, min_leaf_size=10):
         """Trains a Decision Tree Regressor based on the input variable and output variable 
            with minimum leaf size and maximum depth of tree as constraints
 
@@ -49,7 +48,7 @@ class DecisionTree:
         """        
 
         self.min_leaf_size = min_leaf_size
-        self.max_depth = max_depth
+        # self.max_depth = max_depth
 
         assert outputs.ndim == 1, "Error: y variable array needs to be 1d"
         # Initiate best_split_feat to record best split feature
@@ -58,19 +57,10 @@ class DecisionTree:
         min_variance = np.var(outputs)
         # Capture no.of features in the input array
         inp_shape = inputs.shape[-1]
-
-        # print(len(inputs))
-        # print(len(self.decision_boundary))
         
-        if max_depth is not None:
-            if len(inputs) <= min_leaf_size or len(self.decision_boundary) == max_depth:
-                self.prediction = np.mean(outputs)
-                return
-            assert len(self.decision_boundary) <= max_depth, "Error: max depth of tree constraint unsatisfied"
-        else:
-            if len(inputs) <= min_leaf_size:
-                self.prediction = np.mean(outputs)
-                return
+        if len(inputs) <= min_leaf_size:
+            self.prediction = np.mean(outputs)
+            return
         
         for i in range(inp_shape):
             
@@ -104,8 +94,8 @@ class DecisionTree:
             self.left = DecisionTree(self.decision_boundary,self.node_feature)
             self.right = DecisionTree(self.decision_boundary,self.node_feature)
 
-            self.left.train_tree(inputs = left_X, outputs = left_y,min_leaf_size=self.min_leaf_size,max_depth=self.max_depth)
-            self.right.train_tree(inputs = right_X,outputs = right_y,min_leaf_size=self.min_leaf_size,max_depth=self.max_depth)
+            self.left.train_tree(inputs = left_X, outputs = left_y,min_leaf_size=self.min_leaf_size)
+            self.right.train_tree(inputs = right_X,outputs = right_y,min_leaf_size=self.min_leaf_size)
         else:
             self.prediction = np.mean(outputs)
 
@@ -146,7 +136,7 @@ class DecisionTree:
         return np.array(y_predict)
 
 
-def test_model(data, random_state, min_leaf_size, max_depth):
+def test_model(data, random_state, min_leaf_size):
     """
     Test the DecisionTree class on multiple parameters
     with multiple inputs.
@@ -162,7 +152,7 @@ def test_model(data, random_state, min_leaf_size, max_depth):
     # Create the model
     tree_model = DecisionTree(decision_boundary=list(),node_feature=list())
     # train the model
-    tree_model.train_tree(x_train, y_train, min_leaf_size=min_leaf_size,max_depth=max_depth)
+    tree_model.train_tree(x_train, y_train, min_leaf_size=min_leaf_size)
     # create predictions
     predictions = tree_model.predict(x_test)
     # record speed time
@@ -170,7 +160,5 @@ def test_model(data, random_state, min_leaf_size, max_depth):
     #record root mean squared error
     rmse = round(sqrt(mean_squared_error(y_test, predictions)), 2)
 
-    max_depth_tree = len(tree_model.decision_boundary)
-
-    return [random_state, min_leaf_size, rmse, speed, predictions, max_depth_tree]
+    return [random_state, min_leaf_size, rmse, speed, predictions]
 
